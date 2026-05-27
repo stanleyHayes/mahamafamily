@@ -88,6 +88,7 @@ export function MediaPage() {
                   <IconButton
                     size="small"
                     onClick={() => { if (confirm("Delete media?")) remove.mutate(m.id); }}
+                    aria-label="Delete media"
                     sx={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", color: "#fff", "&:hover": { background: "rgba(0,0,0,0.8)" } }}
                   >
                     <DeleteIcon fontSize="small" />

@@ -62,7 +62,7 @@ export function UsersPage() {
               sortable: false,
               renderCell: (p) => (
                 <Tooltip title="Delete">
-                  <IconButton size="small" onClick={() => { if (confirm("Delete?")) remove.mutate(p.row.id as string); }}>
+                  <IconButton size="small" onClick={() => { if (confirm("Delete?")) remove.mutate(p.row.id as string); }} aria-label="Delete user">
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>

@@ -62,7 +62,7 @@ export function SubscribersPage() {
               width: 80,
               sortable: false,
               renderCell: (p) => (
-                <Tooltip title="Remove"><IconButton size="small" onClick={() => { if (confirm("Remove subscriber?")) remove.mutate(p.row.id as string); }}><DeleteIcon fontSize="small" /></IconButton></Tooltip>
+                <Tooltip title="Remove"><IconButton size="small" onClick={() => { if (confirm("Remove subscriber?")) remove.mutate(p.row.id as string); }} aria-label="Remove subscriber"><DeleteIcon fontSize="small" /></IconButton></Tooltip>
               ),
             },
           ]}

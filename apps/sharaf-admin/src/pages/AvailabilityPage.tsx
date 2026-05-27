@@ -89,7 +89,7 @@ function WeeklyHours() {
                 <Typography sx={{ opacity: 0.5 }}>—</Typography>
                 <TextField type="time" size="small" value={w.endTime} onChange={(e) => updateWindow(w.id, { endTime: e.target.value })} />
                 <Box sx={{ flex: 1 }} />
-                <Tooltip title="Remove"><IconButton onClick={() => removeWindow(w.id)}><DeleteIcon /></IconButton></Tooltip>
+                <Tooltip title="Remove"><IconButton onClick={() => removeWindow(w.id)} aria-label="Remove window"><DeleteIcon /></IconButton></Tooltip>
               </Stack>
             ))}
           </Stack>
@@ -197,7 +197,7 @@ function MeetingTypes() {
               <Chip size="small" label={mt.public ? "Public" : "Private"} variant="outlined" />
               <Button size="small" onClick={() => setEditing(mt)}>Edit</Button>
               <Tooltip title="Delete">
-                <IconButton size="small" onClick={() => { if (confirm("Delete?")) remove.mutate(mt.id); }}>
+                <IconButton size="small" onClick={() => { if (confirm("Delete?")) remove.mutate(mt.id); }} aria-label="Delete meeting type">
                   <DeleteIcon fontSize="small" />
                 </IconButton>
               </Tooltip>

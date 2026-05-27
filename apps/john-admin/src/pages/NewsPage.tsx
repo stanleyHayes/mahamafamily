@@ -137,8 +137,8 @@ export function NewsPage() {
               sortable: false,
               renderCell: (p) => (
                 <Stack direction="row">
-                  <Tooltip title="Edit"><IconButton size="small" onClick={() => setEditing(p.row as NewsPostDTO)}><EditIcon fontSize="small" /></IconButton></Tooltip>
-                  <Tooltip title="Delete"><IconButton size="small" onClick={() => { if (confirm("Delete?")) remove.mutate(p.row.id as string); }}><DeleteIcon fontSize="small" /></IconButton></Tooltip>
+                  <Tooltip title="Edit"><IconButton size="small" onClick={() => setEditing(p.row as NewsPostDTO)} aria-label="Edit post"><EditIcon fontSize="small" /></IconButton></Tooltip>
+                  <Tooltip title="Delete"><IconButton size="small" onClick={() => { if (confirm("Delete?")) remove.mutate(p.row.id as string); }} aria-label="Delete post"><DeleteIcon fontSize="small" /></IconButton></Tooltip>
                 </Stack>
               ),
             },
