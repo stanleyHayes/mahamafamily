@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
+    />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="News" href="/rss.xml" />
+    <meta name="theme-color" content="#0B4F2C" />
+    <title>John Dramani Mahama — President of Ghana</title>
+    <style>
+      html, body { margin: 0; padding: 0; background: #FBF8F1; }
+      .jm-splash {
+        position: fixed; inset: 0; z-index: 9999;
+        background: linear-gradient(180deg, #FBF8F1 0%, #f4f0e1 100%);
+        color: #0F1A14;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        font-family: "DM Serif Display", "Playfair Display", Georgia, serif;
+        animation: jm-fade-in 0.45s ease-out both;
+      }
+      .jm-splash__kente {
+        position: absolute; top: 0; left: 0; right: 0; height: 5px; display: flex;
+      }
+      .jm-splash__kente span { flex: 1; }
+      .jm-splash__kente span:nth-child(1) { background: #8E1B25; }
+      .jm-splash__kente span:nth-child(2) { background: #D4AF37; }
+      .jm-splash__kente span:nth-child(3) { background: #0B4F2C; }
+      .jm-splash__kente.bottom { top: auto; bottom: 0; }
+      .jm-splash__kente.bottom span:nth-child(1) { background: #0B4F2C; }
+      .jm-splash__kente.bottom span:nth-child(3) { background: #8E1B25; }
+      .jm-splash__overline {
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase;
+        font-weight: 700; color: #8E1B25; margin-bottom: 28px;
+      }
+      .jm-splash__star {
+        animation: jm-star 2.4s ease-in-out infinite;
+      }
+      .jm-splash__title {
+        margin: 24px 0 0 0;
+        font-size: clamp(48px, 8vw, 96px);
+        line-height: 0.96; color: #0B4F2C; text-align: center;
+      }
+      .jm-splash__rule {
+        margin-top: 24px; height: 2px; width: 0; background: #D4AF37;
+        animation: jm-rule 1.8s cubic-bezier(0.2,0.65,0.3,0.95) forwards;
+      }
+      .jm-splash__caption {
+        margin-top: 22px;
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+        font-size: 19px; color: rgba(15,26,20,0.78); text-align: center;
+        max-width: 520px; padding: 0 24px;
+      }
+      .jm-splash__seal {
+        position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+        font-family: "Inter", sans-serif; font-size: 10px; letter-spacing: 0.4em;
+        color: rgba(11,79,44,0.5); text-transform: uppercase;
+      }
+      @keyframes jm-fade-in { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes jm-star {
+        0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+        50% { transform: translateY(-6px) scale(1.04); opacity: 0.85; }
+      }
+      @keyframes jm-rule { to { width: 220px; } }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="jm-splash" role="status" aria-label="Loading">
+        <div class="jm-splash__kente"><span></span><span></span><span></span></div>
+        <div class="jm-splash__overline">His Excellency</div>
+        <svg class="jm-splash__star" width="64" height="64" viewBox="0 0 24 24" fill="#0B4F2C" aria-hidden="true">
+          <path d="M12 2 L14.39 8.41 L21.18 8.79 L15.85 12.96 L17.65 19.5 L12 15.77 L6.35 19.5 L8.15 12.96 L2.82 8.79 L9.61 8.41 Z" />
+        </svg>
+        <h1 class="jm-splash__title">John Dramani<br />Mahama.</h1>
+        <div class="jm-splash__rule"></div>
+        <p class="jm-splash__caption">"The work begins immediately."</p>
+        <div class="jm-splash__seal">Office of the President · Republic of Ghana</div>
+        <div class="jm-splash__kente bottom"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
