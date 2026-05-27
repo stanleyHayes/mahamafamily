@@ -1,11 +1,14 @@
 {
-  "name": "John Mahama — Office",
-  "short_name": "John Mahama",
-  "description": "Industrialist · Founder, Engineers & Planners · Patron of Ghana",
+  "name": "Lordina Mahama — Office of the First Lady",
+  "short_name": "Lordina Mahama",
+  "description": "First Lady of Ghana · Founder, the Lordina Foundation · The more we share, the more we have.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0E1116",
-  "theme_color": "#0E1116",
+  "background_color": "#F7F0E1",
+  "theme_color": "#7B2335",
+  "scope": "/",
+  "orientation": "portrait",
+  "categories": ["politics", "lifestyle", "charity"],
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
