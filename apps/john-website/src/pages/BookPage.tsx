@@ -6,7 +6,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subjectTokens } from "@mahama/ui-theme";
-import { trackEvent, QueryError } from "@mahama/website-core";
+import { trackEvent, QueryError, Seo } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";
 import { IbrahimBookIndex } from "./book/IbrahimBook.js";
 import { JohnBookIndex } from "./book/JohnBook.js";
@@ -145,6 +145,7 @@ function BookingFlow({ slug }: { slug: string }) {
 
   return (
     <Container maxWidth="lg" sx={{ py: 12 }}>
+      <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title={`Book ${mt.data.name}`} path={`/book/${slug}`} />
       <Button startIcon={<ArrowBackIcon />} onClick={() => navigate("/book")} sx={{ mb: 3 }}>
         All meeting types
       </Button>

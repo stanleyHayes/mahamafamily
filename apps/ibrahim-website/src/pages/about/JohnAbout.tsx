@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
-import { ProfileSkeleton, OptimizedImage } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { KenteStripe, GyeNyame, Sankofa, BlackStar } from "@mahama/website-core";
+import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, KenteStripe, BlackStar, GyeNyame, Sankofa } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
@@ -16,6 +13,7 @@ export function JohnAbout() {
   const quotes = useQuery({ queryKey: ["quotes"], queryFn: () => api.listQuotes() });
 
   if (profile.isLoading) return <><Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Biography" path="/about"  /><ProfileSkeleton /></>;
+  if (profile.isError) return <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />;
   if (!profile.data) return (
     <Container maxWidth="md" sx={{ py: 14 }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Biography" path="/about"  />

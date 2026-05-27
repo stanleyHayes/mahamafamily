@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
-import { ProfileSkeleton, OptimizedImage } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { HalftoneDots, BoxingGloves, RingCorner } from "@mahama/website-core";
+import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, HalftoneDots, RingCorner, BoxingGloves } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 interface TaleStat { label: string; value: string; }
@@ -18,6 +15,7 @@ export function SharafAbout() {
   const achievements = useQuery({ queryKey: ["achievements"], queryFn: () => api.listAchievements() });
 
   if (profile.isLoading) return <><Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Profile" path="/about"  /><ProfileSkeleton /></>;
+  if (profile.isError) return <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />;
   if (!profile.data) return (
     <Container maxWidth="md" sx={{ py: 14 }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Profile" path="/about"  />

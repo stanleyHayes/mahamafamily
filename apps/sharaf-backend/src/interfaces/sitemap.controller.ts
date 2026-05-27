@@ -61,21 +61,25 @@ export class SitemapController {
     try {
       const host = this.publicSiteHost();
       const staticUrls = ["/", "/about", "/timeline", "/ventures", "/impact", "/news", "/events", "/contact", "/book"];
-      const urls = staticUrls.map((p) => ({ loc: `${host}${p}`, priority: p === "/" ? 1.0 : 0.7, changefreq: "weekly" }));
+      const urls: Array<{ loc: string; priority: number; changefreq: string; lastmod?: string }> = staticUrls.map((p) => ({ loc: `${host}${p}`, priority: p === "/" ? 1.0 : 0.7, changefreq: "weekly" }));
 
       const news = await this.news.listPublished({ pageSize: 200 });
       news.items.forEach((n) =>
-        urls.push({ loc: `${host}/news/${n.slug}`, priority: 0.6, changefreq: "monthly" }),
+        urls.push({ loc: `${host}/news/${n.slug}`, priority: 0.6, changefreq: "monthly", lastmod: (n.updatedAt ?? n.publishedAt ?? n.createdAt).slice(0, 10) }),
       );
       const events = await this.events.findAll();
-      events.forEach(() => urls.push({ loc: `${host}/events`, priority: 0.5, changefreq: "weekly" }));
+      if (events.length > 0) {
+        const latestEvent = events.reduce((a, b) => (a.updatedAt ?? a.startsAt) > (b.updatedAt ?? b.startsAt) ? a : b);
+        urls.push({ loc: `${host}/events`, priority: 0.5, changefreq: "weekly", lastmod: (latestEvent.updatedAt ?? latestEvent.startsAt).slice(0, 10) });
+      }
 
       const xml = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-        ...urls.map((u) =>
-          `  <url><loc>${escapeXml(u.loc)}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`,
-        ),
+        ...urls.map((u) => {
+          const lastmod = u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : "";
+          return `  <url><loc>${escapeXml(u.loc)}</loc>${lastmod}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`;
+        }),
         "</urlset>",
       ].join("\n");
       res.type("application/xml").send(xml);
