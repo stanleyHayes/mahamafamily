@@ -280,7 +280,7 @@ export function AdminLayout() {
             </Menu>
           </Toolbar>
         </AppBar>
-        <Box component="main" sx={{ p: { xs: 2, sm: 3, md: 4 }, flex: 1 }}>
+        <Box component="main" id="main" sx={{ p: { xs: 2, sm: 3, md: 4 }, flex: 1 }}>
           <Outlet />
         </Box>
       </Box>

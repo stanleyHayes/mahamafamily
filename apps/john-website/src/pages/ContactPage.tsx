@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Box, Container, Grid, Stack, Typography, TextField, MenuItem, Button, Alert, Snackbar,
+  Box, Container, Grid, Stack, Typography, TextField, MenuItem, Button, Alert, Snackbar, CircularProgress,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -141,6 +141,7 @@ export function ContactPage() {
                 <Button
                   type="submit"
                   disabled={submit.isPending}
+                  startIcon={submit.isPending ? <CircularProgress size={18} color="inherit" /> : undefined}
                   sx={{ background: "#C9A227", color: "#08090C", fontFamily: SANS, fontSize: 12, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 600, borderRadius: 0, px: 4, py: 1.5, "&:hover": { background: "#F2EDE2" }, "&.Mui-disabled": { background: "rgba(201,162,39,0.4)", color: "#08090C" } }}
                 >
                   {submit.isPending ? "Filing…" : "Lodge the dispatch"}

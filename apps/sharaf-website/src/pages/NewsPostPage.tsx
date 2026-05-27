@@ -6,7 +6,7 @@ import { useTranslation } from "@mahama/i18n";
 
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";
 import { normalizeLang } from "@mahama/shared-types";
-import { OptimizedImage } from "@mahama/website-core";
+import { OptimizedImage, Seo, QueryError, ArticleSchema, BreadcrumbSchema } from "@mahama/website-core";
 
 const NEWSROOM_LABEL: Record<string, string> = {
   ibrahim: "Dispatches",
@@ -23,11 +23,34 @@ export function NewsPostPage() {
   const eyebrow = NEWSROOM_LABEL[SUBJECT] ?? "Newsroom";
 
   if (post.isLoading) return <Container sx={{ py: 16 }}>Loading…</Container>;
+  if (post.isError) return <QueryError message="Unable to load article." onRetry={() => post.refetch()} />;
   if (!post.data) return <Container sx={{ py: 16 }}>Post not found.</Container>;
   const p = post.data;
 
   return (
     <Container maxWidth="md" sx={{ py: 14 }}>
+      <Seo
+        subject={SUBJECT}
+        labels={SUBJECT_LABELS}
+        api={api}
+        title={p.title}
+        path={`/news/${slug}`}
+        type="article"
+      />
+      <ArticleSchema
+        post={p}
+        baseUrl={window.location.origin}
+        authorName={SUBJECT_LABELS[SUBJECT].name}
+      />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[
+          { name: "Home", path: "/" },
+          { name: "News", path: "/news" },
+          { name: p.title, path: `/news/${slug}` },
+        ]}
+      />
+
       <Typography
         sx={{
           color: "secondary.main",

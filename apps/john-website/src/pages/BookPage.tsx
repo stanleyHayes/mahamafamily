@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Container, Box, Grid, Typography, Stack, Button, TextField, Card, CardContent, Alert, Snackbar, Divider, Chip,
+  Container, Box, Grid, Typography, Stack, Button, TextField, Card, CardContent, Alert, Snackbar, Divider, Chip, CircularProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subjectTokens } from "@mahama/ui-theme";
-import { trackEvent } from "@mahama/website-core";
+import { trackEvent, QueryError } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";
 import { IbrahimBookIndex } from "./book/IbrahimBook.js";
 import { JohnBookIndex } from "./book/JohnBook.js";
@@ -106,7 +106,9 @@ function BookingFlow({ slug }: { slug: string }) {
     prevSlotsRef.current = currentSlots;
   }, [slots.data, selectedDate]);
 
-  if (!mt.data) return <Container sx={{ py: 16 }}>Loading…</Container>;
+  if (mt.isLoading) return <Container sx={{ py: 16 }}>Loading…</Container>;
+  if (mt.isError) return <QueryError message="Unable to load meeting type." onRetry={() => mt.refetch()} />;
+  if (!mt.data) return <Container sx={{ py: 16 }}>Meeting type not found.</Container>;
 
   if (confirmed) {
     return (
@@ -164,6 +166,7 @@ function BookingFlow({ slug }: { slug: string }) {
         <Grid item xs={12} md={8} >
           <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
             <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+              {slots.isError && <QueryError message="Unable to load available slots." onRetry={() => slots.refetch()} />}
               {!selectedSlot ? (
                 <>
                   <Typography variant="h6" sx={{ mb: 2 }}>1 · Choose a day</Typography>
@@ -231,7 +234,7 @@ function BookingFlow({ slug }: { slug: string }) {
                       <Grid item xs={12} sm={6} ><TextField fullWidth label="Organisation" value={form.inviteeOrg} onChange={(e) => setForm((f) => ({ ...f, inviteeOrg: e.target.value }))} /></Grid>
                       <Grid item xs={12} ><TextField fullWidth multiline minRows={4} label="What would you like to discuss?" value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} /></Grid>
                     </Grid>
-                    <Button type="submit" variant="contained" size="large" sx={{ mt: 3 }} disabled={create.isPending} >
+                    <Button type="submit" variant="contained" size="large" sx={{ mt: 3 }} disabled={create.isPending} startIcon={create.isPending ? <CircularProgress size={18} color="inherit" /> : undefined}>
                       {create.isPending ? "Confirming…" : "Confirm booking"}
                     </Button>
                   </Box>

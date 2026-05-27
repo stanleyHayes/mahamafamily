@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
+import { SkipLink } from "@mahama/website-core";
 import { useAuth } from "./auth/AuthContext.js";
 import { LoginPage } from "./pages/LoginPage.js";
 import { AdminLayout } from "./components/AdminLayout.js";
@@ -34,7 +35,9 @@ export function App() {
   }
 
   return (
-    <Routes>
+    <>
+      <SkipLink />
+      <Routes>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
       <Route element={user ? <AdminLayout /> : <Navigate to="/login" replace />}>
         <Route path="/" element={<DashboardPage />} />
@@ -58,5 +61,6 @@ export function App() {
         <Route path="/email-events" element={<EmailEventsPage />} />
       </Route>
     </Routes>
+    </>
   );
 }
