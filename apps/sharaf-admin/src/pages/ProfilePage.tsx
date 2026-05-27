@@ -3,6 +3,7 @@ import { Box, Card, CardContent, Stack, TextField, Button, Alert, Snackbar, Typo
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ProfileDTO } from "@mahama/shared-types";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function ProfilePage() {
   const qc = useQueryClient();
@@ -23,6 +24,7 @@ export function ProfilePage() {
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
         <Stack spacing={2} sx={{ maxWidth: 760 }}>
+          {profile.isError && <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />}
           <Typography variant="h5">Profile</Typography>
           <TextField label="Full name" value={form.fullName ?? ""} onChange={(e) => set("fullName", e.target.value)} fullWidth />
           <TextField label="Title" value={form.title ?? ""} onChange={(e) => set("title", e.target.value)} fullWidth />

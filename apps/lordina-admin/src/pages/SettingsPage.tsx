@@ -3,6 +3,7 @@ import { Card, CardContent, Stack, TextField, Button, Snackbar, Alert, Typograph
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { SiteSettingsDTO } from "@mahama/shared-types";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function SettingsPage() {
   const qc = useQueryClient();
@@ -23,6 +24,7 @@ export function SettingsPage() {
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
         <Typography variant="h5" sx={{ mb: 3 }}>Site settings</Typography>
+        {settings.isError && <QueryError message="Unable to load settings." onRetry={() => settings.refetch()} />}
         <Stack spacing={2} sx={{ maxWidth: 720 }}>
           <TextField label="Meta title" value={form.metaTitle ?? ""} onChange={(e) => set("metaTitle", e.target.value)} />
           <TextField label="Meta description" multiline minRows={3} value={form.metaDescription ?? ""} onChange={(e) => set("metaDescription", e.target.value)} />

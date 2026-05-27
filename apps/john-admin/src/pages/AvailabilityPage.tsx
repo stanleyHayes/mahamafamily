@@ -3,6 +3,7 @@ import {
   Box, Card, CardContent, Typography, Stack, TextField, Button, Switch, IconButton, Snackbar, Alert,
   FormControlLabel, MenuItem, Tab, Tabs, Chip, Grid, Tooltip, Divider,
 } from "@mui/material";
+import { QueryError } from "@mahama/website-core";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,6 +58,7 @@ function WeeklyHours() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent sx={{ p: 4 }}>
+        {profile.isError && <QueryError message="Unable to load availability." onRetry={() => profile.refetch()} />}
         <Typography variant="h5">When are you available?</Typography>
         <Typography color="text.secondary" sx={{ mb: 3 }}>Visitors can only book inside these windows.</Typography>
 
@@ -174,6 +176,7 @@ function MeetingTypes() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent sx={{ p: 4 }}>
+        {list.isError && <QueryError message="Unable to load meeting types." onRetry={() => list.refetch()} />}
         <Stack direction="row" alignItems="center" sx={{ mb: 3 }}>
           <Typography variant="h5">Meeting types</Typography>
           <Box sx={{ flex: 1 }} />
@@ -255,6 +258,7 @@ function GoogleCalendarIntegration() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent sx={{ p: 4 }}>
+        {settings.isError && <QueryError message="Unable to load settings." onRetry={() => settings.refetch()} />}
         <Typography variant="h5">Google Calendar</Typography>
         <Typography color="text.secondary" sx={{ mb: 3 }}>
           Two-way sync keeps your availability up to date with Google Calendar.

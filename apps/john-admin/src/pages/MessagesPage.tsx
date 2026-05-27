@@ -6,6 +6,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { MessageDTO } from "@mahama/shared-types";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function MessagesPage() {
   const qc = useQueryClient();
@@ -43,6 +44,7 @@ export function MessagesPage() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
+        {list.isError && <QueryError message="Unable to load messages." onRetry={() => list.refetch()} />}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <TextField size="small" placeholder="Search inbox…" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} />
         </Stack>

@@ -2,6 +2,7 @@ import { Card, CardContent, Stack, Typography, Chip, Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import { tokenStore } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 interface EmailEvent {
   type: string;
@@ -38,6 +39,7 @@ export function EmailEventsPage() {
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
         <Typography variant="h5">Email events</Typography>
+        {data.isError && <QueryError message="Unable to load email events." onRetry={() => data.refetch()} />}
         <Typography color="text.secondary" sx={{ mb: 3, fontSize: 13 }}>
           Live events from Resend — delivery, opens, clicks, bounces, complaints. Bounced or complained recipients are auto-unsubscribed from the newsletter.
         </Typography>

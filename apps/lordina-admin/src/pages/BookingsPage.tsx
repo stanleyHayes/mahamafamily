@@ -7,6 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { BookingDTO } from "@mahama/shared-types";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 const STATUS_COLORS: Record<string, "default" | "primary" | "success" | "error" | "warning"> = {
   pending: "warning",
@@ -43,6 +44,7 @@ export function BookingsPage() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
+        {list.isError && <QueryError message="Unable to load bookings." onRetry={() => list.refetch()} />}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <ToggleButtonGroup exclusive size="small" value={status} onChange={(_, v) => v && setStatus(v)}>
             {["all", "confirmed", "pending", "completed", "cancelled"].map((s) => <ToggleButton key={s} value={s}>{s}</ToggleButton>)}

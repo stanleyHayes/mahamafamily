@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import UploadIcon from "@mui/icons-material/CloudUpload";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function MediaPage() {
   const qc = useQueryClient();
@@ -58,6 +59,7 @@ export function MediaPage() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
+        {list.isError && <QueryError message="Unable to load media." onRetry={() => list.refetch()} />}
         <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
           <TextField size="small" placeholder="Search media…" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} />
           <Box sx={{ flex: 1 }} />

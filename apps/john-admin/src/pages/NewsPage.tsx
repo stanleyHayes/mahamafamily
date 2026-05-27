@@ -12,6 +12,7 @@ import type { NewsPostDTO } from "@mahama/shared-types";
 import { localize } from "@mahama/shared-types";
 import { api } from "../config.js";
 import { LocalizedField } from "../components/LocalizedField.js";
+import { QueryError } from "@mahama/website-core";
 
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
@@ -105,6 +106,7 @@ export function NewsPage() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
+        {list.isError && <QueryError message="Unable to load news posts." onRetry={() => list.refetch()} />}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <TextField size="small" placeholder="Search posts…" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} />
           <Box sx={{ flex: 1 }} />

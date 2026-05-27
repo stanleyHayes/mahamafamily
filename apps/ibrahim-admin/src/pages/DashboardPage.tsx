@@ -1,4 +1,5 @@
 import { Grid, Card, CardContent, Typography, Stack, Box } from "@mui/material";
+import { QueryError } from "@mahama/website-core";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../config.js";
 
@@ -34,6 +35,9 @@ export function DashboardPage() {
 
   return (
     <Stack spacing={4}>
+      {(messages.isError || subs.isError || news.isError || ventures.isError || events.isError || recentMessages.isError) && (
+        <QueryError message="Unable to load dashboard data." onRetry={() => { messages.refetch(); subs.refetch(); news.refetch(); ventures.refetch(); events.refetch(); recentMessages.refetch(); }} />
+      )}
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}><StatCard label="Inbox" value={messages.data?.total ?? 0} hint="Total messages" /></Grid>
         <Grid item xs={12} sm={6} md={3}><StatCard label="Subscribers" value={subs.data?.total ?? 0} hint="Newsletter list" /></Grid>

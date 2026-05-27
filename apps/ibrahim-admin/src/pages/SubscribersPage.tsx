@@ -7,6 +7,7 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import { DataGrid } from "@mui/x-data-grid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function SubscribersPage() {
   const qc = useQueryClient();
@@ -35,6 +36,7 @@ export function SubscribersPage() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
+        {list.isError && <QueryError message="Unable to load subscribers." onRetry={() => list.refetch()} />}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <Box sx={{ flex: 1 }} />
           <Button variant="contained" startIcon={<CampaignIcon />} onClick={() => setOpen(true)}>Broadcast</Button>

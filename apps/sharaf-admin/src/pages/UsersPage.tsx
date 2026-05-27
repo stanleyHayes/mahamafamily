@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DataGrid } from "@mui/x-data-grid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function UsersPage() {
   const qc = useQueryClient();
@@ -39,6 +40,7 @@ export function UsersPage() {
   return (
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
+        {list.isError && <QueryError message="Unable to load users." onRetry={() => list.refetch()} />}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <Box sx={{ flex: 1 }} />
           <Button variant="contained" onClick={() => setOpen(true)}>New user</Button>

@@ -2,6 +2,7 @@ import { Card, CardContent, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import { tokenStore } from "../config.js";
+import { QueryError } from "@mahama/website-core";
 
 export function AuditLogPage() {
   const list = useQuery({
@@ -20,6 +21,7 @@ export function AuditLogPage() {
     <Card elevation={0} sx={{ border: "1px solid", borderColor: "divider" }}>
       <CardContent>
         <Typography variant="h5" sx={{ mb: 2 }}>Audit log</Typography>
+        {list.isError && <QueryError message="Unable to load audit log." onRetry={() => list.refetch()} />}
         <Typography color="text.secondary" sx={{ mb: 3, fontSize: 13 }}>
           Last 100 admin mutations. Read-only. Useful for accountability and reverting unintended changes.
         </Typography>
