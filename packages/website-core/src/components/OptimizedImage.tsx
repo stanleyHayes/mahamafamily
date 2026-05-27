@@ -8,6 +8,8 @@ export interface OptimizedImageProps {
   sizes?: string;
   srcSet?: string;
   objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
   sx?: SxProps<Theme>;
   imgSx?: SxProps<Theme>;
 }
@@ -45,6 +47,8 @@ export function OptimizedImage({
   sizes = "100vw",
   srcSet,
   objectFit = "cover",
+  loading = "lazy",
+  fetchPriority,
   sx,
   imgSx,
 }: OptimizedImageProps) {
@@ -80,7 +84,8 @@ export function OptimizedImage({
         component="img"
         src={resolvedSrc}
         alt={alt}
-        loading="lazy"
+        loading={loading}
+        fetchPriority={fetchPriority}
         decoding="async"
         srcSet={resolvedSrcSet || undefined}
         sizes={sizes}

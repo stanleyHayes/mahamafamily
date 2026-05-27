@@ -69,6 +69,8 @@ export function JohnHome() {
                   <Box sx={{ position: "absolute", top: 8, left: 8, right: -8, bottom: -8, border: "2px solid #0B4F2C", zIndex: 0 }} />
                   <OptimizedImage
   src={p.heroImageUrl}
+  loading="eager"
+  fetchPriority="high"
   alt={p?.fullName}
   sx={{ position: "relative", width: "100%", display: "block", zIndex: 1 }}
   imgSx={{ filter: "sepia(0.04) contrast(1.04)" }}

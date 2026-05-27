@@ -40,6 +40,8 @@ export function SharafHome() {
         {p?.heroImageUrl && (
           <OptimizedImage
   src={p.heroImageUrl}
+  loading="eager"
+  fetchPriority="high"
   alt={p?.fullName}
   sx={{ position: "absolute", inset: 0 }}
   imgSx={{ filter: "grayscale(0.3) contrast(1.15)", opacity: 0.5 }}

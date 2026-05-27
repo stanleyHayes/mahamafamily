@@ -33,6 +33,8 @@ export function IbrahimHome() {
         {p?.heroImageUrl && (
           <OptimizedImage
   src={p.heroImageUrl}
+  loading="eager"
+  fetchPriority="high"
   alt={p?.fullName}
   sx={{ position: "absolute", inset: 0 }}
   imgSx={{ filter: "grayscale(0.3) contrast(1.05)" }}

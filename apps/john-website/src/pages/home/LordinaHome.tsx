@@ -77,6 +77,8 @@ export function LordinaHome() {
                   <Box sx={{ position: "absolute", top: 12, left: 12, right: -12, bottom: -12, background: LORDINA.blush, clipPath: HANDKERCHIEF_CLIP, zIndex: 0 }} />
                   <OptimizedImage
   src={p.heroImageUrl}
+  loading="eager"
+  fetchPriority="high"
   alt={p?.fullName}
   sx={{ position: "relative", width: "100%", display: "block", zIndex: 1 }}
   imgSx={{ clipPath: HANDKERCHIEF_CLIP, filter: "sepia(8%) saturate(0.95)" }}
