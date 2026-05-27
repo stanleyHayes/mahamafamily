@@ -17,7 +17,24 @@ export async function startServer(container: Container, env: BackendEnv, logger:
   const db = container.get<Db>(TYPES.Mongo);
 
   app.set("trust proxy", 1);
-  app.use(helmet());
+  app.disable("x-powered-by");
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
+        imgSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        scriptSrc: ["'self'"],
+        scriptSrcAttr: ["'none'"],
+        styleSrc: ["'self'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+  }));
   app.use(compression());
   app.use(express.json({
     limit: "1mb",
@@ -54,6 +71,11 @@ export async function startServer(container: Container, env: BackendEnv, logger:
   app.use("/api/public/booking", bookingLimiter);
   app.use("/api/", generalLimiter);
 
+  app.use((_req, res, next) => {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    next();
+  });
+
   app.get("/health", async (_req, res) => {
     let mongodb: "ok" | "error" = "ok";
     try {
@@ -64,6 +86,15 @@ export async function startServer(container: Container, env: BackendEnv, logger:
     const email = env.RESEND_API_KEY ? "ok" : "not_configured";
     const status = mongodb === "ok" ? "ok" : "degraded";
     res.json({ status, subject: env.SUBJECT, timestamp: new Date().toISOString(), checks: { mongodb, email } });
+  });
+
+  app.get("/rss.xml", (_req, res, next) => {
+    res.setHeader("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400");
+    next();
+  });
+  app.get("/sitemap.xml", (_req, res, next) => {
+    res.setHeader("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400");
+    next();
   });
 
   app.get("/metrics", async (_req, res) => {
