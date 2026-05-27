@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
-import { Box, Container, Stack, Typography, Button, Alert, Grid } from "@mui/material";
+import { Box, Container, Stack, Typography, Button, Alert, Grid, CircularProgress } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";;
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
+import { Seo, BlueprintGrid, QueryError } from "@mahama/website-core";
 
 const MONO = '"IBM Plex Mono", monospace';
 const SERIF = '"Playfair Display", Georgia, serif';
@@ -106,6 +105,9 @@ export function ReschedulePage() {
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Reissue the engagement"  />
       <BlueprintGrid />
 
+      {types.isError && <Container maxWidth="md" sx={{ py: 4 }}><QueryError message="Unable to load meeting types." onRetry={() => types.refetch()} /></Container>}
+      {slots.isError && <Container maxWidth="md" sx={{ py: 4 }}><QueryError message="Unable to load available slots." onRetry={() => slots.refetch()} /></Container>}
+
       <Container maxWidth="md" sx={{ position: "relative", zIndex: 1, pt: { xs: 10, md: 14 }, pb: { xs: 10, md: 14 } }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 4 }}>
@@ -183,6 +185,7 @@ export function ReschedulePage() {
             <Button
               disabled={!selectedSlot || reschedule.isPending}
               onClick={() => reschedule.mutate()}
+              startIcon={reschedule.isPending ? <CircularProgress size={18} color="inherit" /> : undefined}
               sx={{ background: "#C9A227", color: "#08090C", fontFamily: SANS, fontSize: 12, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 600, borderRadius: 0, px: 4, py: 1.5, "&:hover": { background: "#F2EDE2" }, "&.Mui-disabled": { background: "rgba(201,162,39,0.3)", color: "#08090C" } }}
             >
               {reschedule.isPending ? "Stamping…" : "Stamp the new entry"}
