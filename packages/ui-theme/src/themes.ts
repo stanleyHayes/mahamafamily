@@ -42,6 +42,14 @@ export function buildTheme(subject: SubjectPaletteKey, mode: "light" | "dark" = 
           containedPrimary: { boxShadow: "0 6px 22px rgba(0,0,0,0.18)" },
         },
       },
+      MuiCssBaseline: {
+        styleOverrides: {
+          "*:focus-visible": {
+            outline: `2px solid ${p.secondary}`,
+            outlineOffset: 2,
+          },
+        },
+      },
       MuiAppBar: {
         defaultProps: { elevation: 0, color: "transparent" },
       },

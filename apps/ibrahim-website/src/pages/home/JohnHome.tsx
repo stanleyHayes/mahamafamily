@@ -3,9 +3,7 @@ import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Seo, OptimizedImage } from "@mahama/website-core";
-import { HeroSkeleton } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame, Sankofa } from "@mahama/website-core";
+import { Seo, OptimizedImage, HeroSkeleton, KenteStripe, BlackStar, GyeNyame, Sankofa, QueryError, PersonSchema, BreadcrumbSchema } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 export function JohnHome() {
@@ -16,6 +14,7 @@ export function JohnHome() {
   const quotes = useQuery({ queryKey: ["quotes"], queryFn: () => api.listQuotes() });
 
   if (profile.isLoading) return <HeroSkeleton />;
+  if (profile.isError) return <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />;
   const p = profile.data;
   const featuredQuote = quotes.data?.find((q) => q.featured) ?? quotes.data?.[0];
   const upcomingEvents = (events.data ?? []).slice(0, 3);
@@ -24,6 +23,8 @@ export function JohnHome() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="President of the Republic of Ghana"  />
+      {p && <PersonSchema profile={p} baseUrl={window.location.origin} />}
+      <BreadcrumbSchema items={[{ name: "Home", path: "/" }]} baseUrl={window.location.origin} />
 
       {/* Hero — state portrait album */}
       <Box sx={{ position: "relative", py: { xs: 8, md: 12 }, background: "linear-gradient(180deg, #FBF8F1 0%, #f4f0e1 100%)" }}>

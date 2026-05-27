@@ -74,6 +74,11 @@
       @keyframes im-fade-in { from { opacity: 0; } to { opacity: 1; } }
       @keyframes im-rule { to { width: 220px; } }
       @keyframes im-dot { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .im-splash { animation: none; }
+        .im-splash__rule { animation: none; width: 220px; }
+        .im-splash__dots span { animation: none; opacity: 0.25; }
+      }
     </style>
   </head>
   <body>

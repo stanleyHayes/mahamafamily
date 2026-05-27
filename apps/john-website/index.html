@@ -69,6 +69,11 @@
         50% { transform: translateY(-6px) scale(1.04); opacity: 0.85; }
       }
       @keyframes jm-rule { to { width: 220px; } }
+      @media (prefers-reduced-motion: reduce) {
+        .jm-splash { animation: none; }
+        .jm-splash__star { animation: none; }
+        .jm-splash__rule { animation: none; width: 220px; }
+      }
     </style>
   </head>
   <body>

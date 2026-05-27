@@ -4,9 +4,7 @@ import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Seo, OptimizedImage } from "@mahama/website-core";
-import { HeroSkeleton } from "@mahama/website-core";
-import { HalftoneDots, BoxingGloves } from "@mahama/website-core";
+import { Seo, OptimizedImage, HeroSkeleton, HalftoneDots, BoxingGloves, QueryError, PersonSchema, BreadcrumbSchema } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 export function SharafHome() {
@@ -17,6 +15,7 @@ export function SharafHome() {
   const quotes = useQuery({ queryKey: ["quotes"], queryFn: () => api.listQuotes() });
 
   if (profile.isLoading) return <HeroSkeleton />;
+  if (profile.isError) return <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />;
   const p = profile.data;
   const sortedEvents = [...(events.data ?? [])].sort((a, b) => +new Date(a.startsAt) - +new Date(b.startsAt));
   const billboard = sortedEvents.find((e) => +new Date(e.startsAt) > Date.now()) ?? sortedEvents[0];
@@ -26,6 +25,8 @@ export function SharafHome() {
   return (
     <Box sx={{ background: "#0B0B0B", color: "#F4F1ED", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Sports Entrepreneur & Boxing Promoter"  />
+      {p && <PersonSchema profile={p} baseUrl={window.location.origin} />}
+      <BreadcrumbSchema items={[{ name: "Home", path: "/" }]} baseUrl={window.location.origin} />
       <HalftoneDots color="rgba(255,255,255,0.025)" />
 
       {/* Top kente strap */}

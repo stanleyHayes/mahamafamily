@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 import type { ReactNode } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Box, LinearProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
-import { ScheduleFab, Seo, CookieBanner, PageTransition, AnalyticsProvider, RouteFallback, ScrollToTop } from "@mahama/website-core";
+import { ScheduleFab, Seo, CookieBanner, PageTransition, AnalyticsProvider, RouteFallback, ScrollToTop, SkipLink } from "@mahama/website-core";
 import { SUBJECT, SUBJECT_LABELS, api } from "./config.js";
 import { SiteHeader } from "./components/SiteHeader.js";
 import { SiteFooter } from "./components/SiteFooter.js";
@@ -33,8 +33,9 @@ export function App() {
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <ScrollToTop />
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} />
+      <SkipLink />
       <SiteHeader />
-      <Box component="main" sx={{ flex: 1 }}>
+      <Box component="main" id="main" sx={{ flex: 1 }}>
         <Suspense fallback={<RouteFallback />}>
           <AnimatePresence mode="wait" initial={false} >
             <Routes location={location} key={location.pathname} >

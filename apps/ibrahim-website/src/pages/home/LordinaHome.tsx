@@ -3,8 +3,7 @@ import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Seo, OptimizedImage } from "@mahama/website-core";
-import { HeroSkeleton } from "@mahama/website-core";
+import { Seo, OptimizedImage, HeroSkeleton, QueryError, PersonSchema, BreadcrumbSchema } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { LORDINA, INVITATION_CLIP, HANDKERCHIEF_CLIP } from "../lordina/theme.js";
 import { Hibiscus, Ribbon, Garland, PaperTexture, Mmusuyidee } from "../lordina/motifs.js";
@@ -18,6 +17,7 @@ export function LordinaHome() {
   const philanthropy = useQuery({ queryKey: ["philanthropy"], queryFn: () => api.listPhilanthropy() });
 
   if (profile.isLoading) return <HeroSkeleton />;
+  if (profile.isError) return <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />;
   const p = profile.data;
   const featuredQuote = quotes.data?.find((q) => q.featured) ?? quotes.data?.[0];
   const flagshipFoundation = (ventures.data ?? []).filter((v) => v.featured).slice(0, 2);
@@ -30,6 +30,8 @@ export function LordinaHome() {
   return (
     <Box sx={{ background: LORDINA.paper, color: LORDINA.ink, position: "relative" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="First Lady of Ghana"  />
+      {p && <PersonSchema profile={p} baseUrl={window.location.origin} />}
+      <BreadcrumbSchema items={[{ name: "Home", path: "/" }]} baseUrl={window.location.origin} />
       <PaperTexture />
 
       {/* Hero */}

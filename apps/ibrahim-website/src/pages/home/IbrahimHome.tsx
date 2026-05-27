@@ -4,11 +4,7 @@ import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Seo, OptimizedImage } from "@mahama/website-core";
-import { HeroSkeleton } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
-import { Reveal } from "@mahama/website-core";
-import { StaggerGroup, StaggerItem } from "@mahama/website-core";
+import { Seo, OptimizedImage, HeroSkeleton, BlueprintGrid, Reveal, StaggerGroup, StaggerItem, QueryError, PersonSchema, BreadcrumbSchema } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 export function IbrahimHome() {
@@ -23,11 +19,14 @@ export function IbrahimHome() {
   const philFeatured = (philanthropy.data ?? []).filter((p) => p.featured).slice(0, 3);
 
   if (profile.isLoading) return <HeroSkeleton />;
+  if (profile.isError) return <QueryError message="Unable to load profile." onRetry={() => profile.refetch()} />;
   const p = profile.data;
 
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Industrialist & Patron of Ghana"  />
+      {p && <PersonSchema profile={p} baseUrl={window.location.origin} />}
+      <BreadcrumbSchema items={[{ name: "Home", path: "/" }]} baseUrl={window.location.origin} />
 
       {/* Hero — full-bleed dossier cover */}
       <Box sx={{ position: "relative", minHeight: { xs: 720, md: 920 }, overflow: "hidden", display: "flex", alignItems: "flex-end", borderBottom: "1px solid rgba(201,162,39,0.32)" }}>

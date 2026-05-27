@@ -43,3 +43,12 @@ export {
 export { StaggerGroup, StaggerItem } from "./components/StaggerGroup.js";
 export { RouteFallback } from "./components/RouteFallback.js";
 export { ScrollToTop } from "./components/ScrollToTop.js";
+export {
+  PersonSchema,
+  OrganizationSchema,
+  ArticleSchema,
+  EventSchema,
+  BreadcrumbSchema,
+} from "./components/StructuredData.js";
+export { QueryError } from "./components/QueryError.js";
+export { SkipLink } from "./components/SkipLink.js";
