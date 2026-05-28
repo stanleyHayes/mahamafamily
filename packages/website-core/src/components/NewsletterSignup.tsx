@@ -33,13 +33,15 @@ export function NewsletterSignup({ onSubscribe, buttonLabel = "Subscribe", place
         <TextField
           type="email"
           placeholder={placeholder}
+          autoComplete="email"
+          aria-label="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           size="small"
           sx={{ flex: 1 }}
         />
-        <Button type="submit" variant="contained" size="small" disabled={loading} >
+        <Button type="submit" variant="contained" size="small" disabled={loading} aria-label={buttonLabel} >
           {loading ? "…" : buttonLabel}
         </Button>
       </Stack>

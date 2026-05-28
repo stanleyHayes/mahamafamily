@@ -6,7 +6,7 @@ import { useTranslation } from "@mahama/i18n";
 
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";
 import { normalizeLang } from "@mahama/shared-types";
-import { OptimizedImage, Seo, QueryError, ArticleSchema, BreadcrumbSchema } from "@mahama/website-core";
+import { OptimizedImage, Seo, QueryError, ArticleSchema, BreadcrumbSchema , ArticleSkeleton} from "@mahama/website-core";
 
 const NEWSROOM_LABEL: Record<string, string> = {
   ibrahim: "Dispatches",
@@ -22,7 +22,7 @@ export function NewsPostPage() {
   const tokens = subjectTokens[SUBJECT];
   const eyebrow = NEWSROOM_LABEL[SUBJECT] ?? "Newsroom";
 
-  if (post.isLoading) return <Container sx={{ py: 16 }}>Loading…</Container>;
+  if (post.isLoading) return <><Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Loading…" path={`/news/${slug}`} /><ArticleSkeleton /></>;
   if (post.isError) return <QueryError message="Unable to load article." onRetry={() => post.refetch()} />;
   if (!post.data) return <Container sx={{ py: 16 }}>Post not found.</Container>;
   const p = post.data;

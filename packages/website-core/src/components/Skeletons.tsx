@@ -118,3 +118,46 @@ export function ProfileSkeleton() {
     </Container>
   );
 }
+
+export function DetailSkeleton() {
+  const shimmer = useShimmerStyles();
+  return (
+    <Container maxWidth="md" sx={{ py: 14 }}>
+      <Stack spacing={3}>
+        <Skeleton variant="rectangular" width={160} height={16} sx={{ background: (t) => `${t.palette.secondary.main}40`, ...shimmer }} />
+        <Skeleton variant="rectangular" width="90%" height={48} sx={{ background: (t) => `${t.palette.text.primary}14`, ...shimmer }} />
+        <Skeleton variant="rectangular" width="60%" height={48} sx={{ background: (t) => `${t.palette.text.primary}14`, ...shimmer }} />
+        <Skeleton variant="rectangular" width={140} height={16} sx={{ mb: 2 }} />
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 3 }}>
+          <Skeleton variant="rectangular" width="100%" height={200} sx={{ ...shimmer }} />
+          <Stack spacing={2}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} variant="text" width={i % 2 === 0 ? "100%" : "70%"} sx={{ my: 0.5 }} />
+            ))}
+          </Stack>
+        </Box>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} variant="text" width={i % 3 === 2 ? "55%" : "100%"} sx={{ my: 0.5 }} />
+        ))}
+      </Stack>
+    </Container>
+  );
+}
+
+export function ArticleSkeleton() {
+  const shimmer = useShimmerStyles();
+  return (
+    <Container maxWidth="md" sx={{ py: 14 }}>
+      <Stack spacing={3}>
+        <Skeleton variant="rectangular" width={160} height={16} sx={{ background: (t) => `${t.palette.secondary.main}40`, ...shimmer }} />
+        <Skeleton variant="rectangular" width="90%" height={48} sx={{ background: (t) => `${t.palette.text.primary}14`, ...shimmer }} />
+        <Skeleton variant="rectangular" width="60%" height={48} sx={{ background: (t) => `${t.palette.text.primary}14`, ...shimmer }} />
+        <Skeleton variant="rectangular" width={140} height={16} sx={{ mb: 2 }} />
+        <Skeleton variant="rectangular" width="100%" height={320} sx={{ mb: 2, ...shimmer }} />
+        {Array.from({ length: 12 }).map((_, i) => (
+          <Skeleton key={i} variant="text" width={i % 4 === 3 ? "55%" : "100%"} sx={{ my: 0.5 }} />
+        ))}
+      </Stack>
+    </Container>
+  );
+}

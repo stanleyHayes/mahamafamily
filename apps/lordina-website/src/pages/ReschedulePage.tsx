@@ -4,7 +4,7 @@ import { Box, Container, Stack, Typography, Button, Alert, Grid, CircularProgres
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";;
-import { Seo, BlueprintGrid, QueryError } from "@mahama/website-core";
+import { Seo, BlueprintGrid, QueryError , BreadcrumbSchema} from "@mahama/website-core";
 
 const MONO = '"IBM Plex Mono", monospace';
 const SERIF = '"Playfair Display", Georgia, serif';
@@ -103,6 +103,10 @@ export function ReschedulePage() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Reissue the engagement"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Reschedule", path: "/reschedule" }]}
+      />
       <BlueprintGrid />
 
       {types.isError && <Container maxWidth="md" sx={{ py: 4 }}><QueryError message="Unable to load meeting types." onRetry={() => types.refetch()} /></Container>}

@@ -3,10 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import type { FlattenLocalized, EventDTO } from "@mahama/shared-types";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame } from "@mahama/website-core";
+import { BlackStar, CardGridSkeleton, EmptyState, GyeNyame, KenteStripe, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { normalizeLang } from "@mahama/shared-types";
 import { resolveLocalized } from "@mahama/shared-types";
@@ -115,6 +112,10 @@ export function JohnEvents() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="The State Diary" path="/events"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Events", path: "/events" }]}
+      />
       <KenteStripe height={6} />
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
@@ -167,7 +168,7 @@ export function JohnEvents() {
           </Stack>
         )}
 
-        {events.isLoading ? (
+        {events.isError ? (<QueryError message="Unable to load events." onRetry={() => events.refetch()} />) : events.isLoading ? (
           <CardGridSkeleton count={4} />
         ) : !sorted.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="No engagements on the diary." body="State functions and bilateral meetings will be filed here as they are confirmed." ctaLabel="Request an audience" ctaTo="/book"  />

@@ -6,7 +6,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subjectTokens } from "@mahama/ui-theme";
-import { trackEvent, QueryError, Seo } from "@mahama/website-core";
+import { trackEvent, QueryError, Seo , DetailSkeleton} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";
 import { IbrahimBookIndex } from "./book/IbrahimBook.js";
 import { JohnBookIndex } from "./book/JohnBook.js";
@@ -38,6 +38,7 @@ function BookingFlow({ slug }: { slug: string }) {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [form, setForm] = useState({ inviteeName: "", inviteeEmail: "", inviteePhone: "", inviteeOrg: "", notes: "" });
   const [honeypot, setHoneypot] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [snack, setSnack] = useState<{ msg: string; ok: boolean } | null>(null);
   const [confirmed, setConfirmed] = useState<{ when: string; type: string } | null>(null);
   const [staleSlots, setStaleSlots] = useState<Set<string>>(new Set());
@@ -65,6 +66,7 @@ function BookingFlow({ slug }: { slug: string }) {
     } as Parameters<typeof api.createBooking>[0]),
     onSuccess: (b) => {
       setConfirmed({ when: b.startsAt, type: b.meetingTypeName });
+      setErrors({});
       queryClient.invalidateQueries({ queryKey: ["slots", slug] });
       trackEvent("booking_completed");
     },
@@ -106,7 +108,7 @@ function BookingFlow({ slug }: { slug: string }) {
     prevSlotsRef.current = currentSlots;
   }, [slots.data, selectedDate]);
 
-  if (mt.isLoading) return <Container sx={{ py: 16 }}>Loading…</Container>;
+  if (mt.isLoading) return <><Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Loading…" path={`/book/${slug}`} /><DetailSkeleton /></>;
   if (mt.isError) return <QueryError message="Unable to load meeting type." onRetry={() => mt.refetch()} />;
   if (!mt.data) return <Container sx={{ py: 16 }}>Meeting type not found.</Container>;
 
@@ -229,11 +231,11 @@ function BookingFlow({ slug }: { slug: string }) {
                   <Box component="form" onSubmit={(e) => { e.preventDefault(); create.mutate(); }}>
                     <input type="text" name="website" autoComplete="off" tabIndex={-1} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} style={{ position: "absolute", left: -9999, opacity: 0 }} aria-hidden />
                     <Grid container spacing={2} >
-                      <Grid item xs={12} sm={6} ><TextField required fullWidth label="Full name" value={form.inviteeName} onChange={(e) => setForm((f) => ({ ...f, inviteeName: e.target.value }))} /></Grid>
-                      <Grid item xs={12} sm={6} ><TextField required type="email" fullWidth label="Email" value={form.inviteeEmail} onChange={(e) => setForm((f) => ({ ...f, inviteeEmail: e.target.value }))} /></Grid>
-                      <Grid item xs={12} sm={6} ><TextField fullWidth label="Phone" value={form.inviteePhone} onChange={(e) => setForm((f) => ({ ...f, inviteePhone: e.target.value }))} /></Grid>
-                      <Grid item xs={12} sm={6} ><TextField fullWidth label="Organisation" value={form.inviteeOrg} onChange={(e) => setForm((f) => ({ ...f, inviteeOrg: e.target.value }))} /></Grid>
-                      <Grid item xs={12} ><TextField fullWidth multiline minRows={4} label="What would you like to discuss?" value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} /></Grid>
+                      <Grid item xs={12} sm={6} ><TextField required fullWidth label="Full name" autoComplete="name" value={form.inviteeName} onChange={(e) => setForm((f) => ({ ...f, inviteeName: e.target.value }))} error={!!errors.inviteeName} helperText={errors.inviteeName || " "} /></Grid>
+                      <Grid item xs={12} sm={6} ><TextField required type="email" fullWidth label="Email" autoComplete="email" value={form.inviteeEmail} onChange={(e) => setForm((f) => ({ ...f, inviteeEmail: e.target.value }))} error={!!errors.inviteeEmail} helperText={errors.inviteeEmail || " "} /></Grid>
+                      <Grid item xs={12} sm={6} ><TextField fullWidth label="Phone" autoComplete="tel" value={form.inviteePhone} onChange={(e) => setForm((f) => ({ ...f, inviteePhone: e.target.value }))} /></Grid>
+                      <Grid item xs={12} sm={6} ><TextField fullWidth label="Organisation" autoComplete="organization" value={form.inviteeOrg} onChange={(e) => setForm((f) => ({ ...f, inviteeOrg: e.target.value }))} /></Grid>
+                      <Grid item xs={12} ><TextField fullWidth multiline minRows={4} label="What would you like to discuss?" autoComplete="off" value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} /></Grid>
                     </Grid>
                     <Button type="submit" variant="contained" size="large" sx={{ mt: 3 }} disabled={create.isPending} startIcon={create.isPending ? <CircularProgress size={18} color="inherit" /> : undefined}>
                       {create.isPending ? "Confirming…" : "Confirm booking"}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Button, Stack, Typography, Container, Link as MuiLink } from "@mui/material";
 
 const KEY = "mahama_cookie_consent";
@@ -6,12 +6,19 @@ const KEY = "mahama_cookie_consent";
 type Choice = "accepted" | "rejected" | null;
 
 export function CookieBanner() {
-  const [choice, setChoice] = useState<Choice>("accepted");
+  const [choice, setChoice] = useState<Choice>(null);
+  const acceptRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const saved = (localStorage.getItem(KEY) as Choice) ?? null;
     setChoice(saved);
   }, []);
+
+  useEffect(() => {
+    if (choice === null) {
+      acceptRef.current?.focus();
+    }
+  }, [choice]);
 
   if (choice !== null) return null;
 
@@ -24,6 +31,7 @@ export function CookieBanner() {
   return (
     <Box
       role="dialog"
+      aria-label="Cookie preferences"
       aria-live="polite"
       sx={{
         position: "fixed",
@@ -47,7 +55,7 @@ export function CookieBanner() {
             <Button onClick={() => set("rejected")} variant="text" sx={{ color: "text.secondary" }}>
               Essential only
             </Button>
-            <Button onClick={() => set("accepted")} variant="contained" color="secondary" sx={{ borderRadius: 0, px: 3 }}>
+            <Button ref={acceptRef} onClick={() => set("accepted")} variant="contained" color="secondary" sx={{ borderRadius: 0, px: 3 }}>
               Accept all
             </Button>
           </Stack>

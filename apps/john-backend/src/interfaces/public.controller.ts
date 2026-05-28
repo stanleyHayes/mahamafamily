@@ -48,7 +48,7 @@ export class PublicController {
   getProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const p = await this.profile.get();
-      ok(res, maybeFlatten(req, p));
+      ok(res, maybeFlatten(req, p), 200, 60);
     } catch (e) {
       next(e);
     }
@@ -56,32 +56,32 @@ export class PublicController {
 
   listTimeline = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, maybeFlatten(req, await this.timeline.findAll()));
+      ok(res, maybeFlatten(req, await this.timeline.findAll()), 200, 60);
     } catch (e) { next(e); }
   };
   listVentures = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, maybeFlatten(req, await this.ventures.findAll()));
+      ok(res, maybeFlatten(req, await this.ventures.findAll()), 200, 60);
     } catch (e) { next(e); }
   };
   listPhilanthropy = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, maybeFlatten(req, await this.philanthropy.findAll()));
+      ok(res, maybeFlatten(req, await this.philanthropy.findAll()), 200, 60);
     } catch (e) { next(e); }
   };
   listAchievements = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, maybeFlatten(req, await this.achievements.findAll()));
+      ok(res, maybeFlatten(req, await this.achievements.findAll()), 200, 60);
     } catch (e) { next(e); }
   };
   listQuotes = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, maybeFlatten(req, await this.quotes.findAll()));
+      ok(res, maybeFlatten(req, await this.quotes.findAll()), 200, 60);
     } catch (e) { next(e); }
   };
   listEvents = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, maybeFlatten(req, await this.events.findAll()));
+      ok(res, maybeFlatten(req, await this.events.findAll()), 200, 60);
     } catch (e) { next(e); }
   };
   listNews = async (req: Request, res: Response, next: NextFunction) => {
@@ -91,19 +91,19 @@ export class PublicController {
         pageSize: req.query.pageSize ? Number(req.query.pageSize) : undefined,
         search: req.query.search as string | undefined,
       });
-      ok(res, maybeFlatten(req, result));
+      ok(res, maybeFlatten(req, result), 200, 30);
     } catch (e) { next(e); }
   };
   getNewsBySlug = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const post = await this.news.findBySlug(req.params.slug!);
       if (!post) throw new NotFoundError("Post", req.params.slug);
-      ok(res, maybeFlatten(req, post));
+      ok(res, maybeFlatten(req, post), 200, 60);
     } catch (e) { next(e); }
   };
   getSettings = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      ok(res, await this.settings.get());
+      ok(res, await this.settings.get(), 200, 60);
     } catch (e) { next(e); }
   };
 }

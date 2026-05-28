@@ -2,9 +2,7 @@ import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink } from "react-router-dom";
 import type { MeetingTypeDTO } from "@mahama/shared-types";
-import { Seo } from "@mahama/website-core";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
+import { CardGridSkeleton, EmptyState, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { LORDINA, PETAL_CLIP } from "../lordina/theme.js";
 import { Hibiscus, Ribbon, PaperTexture, Garland } from "../lordina/motifs.js";
@@ -109,6 +107,10 @@ export function LordinaBookIndex() {
   return (
     <Box sx={{ background: LORDINA.paper, color: LORDINA.ink, position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Patronage Bureau" path="/book"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Book", path: "/book" }]}
+      />
       <PaperTexture />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
@@ -155,7 +157,7 @@ export function LordinaBookIndex() {
           </Typography>
         </Box>
 
-        {types.isLoading ? (
+        {types.isError ? (<QueryError message="Unable to load meeting types." onRetry={() => types.refetch()} />) : types.isLoading ? (
           <CardGridSkeleton count={3} />
         ) : !types.data?.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="The Bureau is at rest." body="Public patronage requests will reopen at the discretion of the Office."  />

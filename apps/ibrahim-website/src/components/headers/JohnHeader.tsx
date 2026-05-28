@@ -171,7 +171,7 @@ export function JohnHeader() {
               <LanguagePicker />
             </Box>
 
-            <IconButton onClick={() => setDrawerOpen(true)} sx={{ display: { xs: "inline-flex", md: "none" }, color: "inherit" }}>
+            <IconButton onClick={() => setDrawerOpen(true)} aria-label="Open menu" sx={{ display: { xs: "inline-flex", md: "none" }, color: "inherit" }}>
               <MenuIcon />
             </IconButton>
           </Toolbar>

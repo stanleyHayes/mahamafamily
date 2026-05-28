@@ -3,10 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import type { TimelineEntryDTO } from "@mahama/shared-types";
-import { TimelineSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
+import { BlueprintGrid, EmptyState, QueryError, Seo, TimelineSkeleton , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { resolveLocalized } from "@mahama/shared-types";
 
@@ -57,6 +54,10 @@ export function IbrahimTimeline() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Operations Log" path="/timeline"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Timeline", path: "/timeline" }]}
+      />
       <BlueprintGrid />
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
         {/* Document header */}
@@ -113,7 +114,7 @@ export function IbrahimTimeline() {
           </Box>
         )}
 
-        {timeline.isLoading ? (
+        {timeline.isError ? (<QueryError message="Unable to load timeline." onRetry={() => timeline.refetch()} />) : timeline.isLoading ? (
           <TimelineSkeleton count={8} />
         ) : !timeline.data?.length ? (
           <EmptyState subject={SUBJECT} title="The log is being assembled." body="Every milestone — birth, founding, takeover, donation — will appear here as it is logged."  />

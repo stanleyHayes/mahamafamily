@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import { VentureGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { HalftoneDots, BoxingGloves, RingCorner } from "@mahama/website-core";
+import { BoxingGloves, EmptyState, HalftoneDots, QueryError, RingCorner, Seo, VentureGridSkeleton , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 interface ToneCfg {
@@ -27,6 +24,10 @@ export function SharafPortfolio() {
   return (
     <Box sx={{ background: "#0B0B0B", color: "#F4F1ED", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="The Operation" path="/ventures"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Ventures", path: "/ventures" }]}
+      />
       <HalftoneDots color="rgba(255,255,255,0.025)" />
 
       {/* Top kente strap */}
@@ -60,7 +61,7 @@ export function SharafPortfolio() {
           </Box>
         </Box>
 
-        {ventures.isLoading ? (
+        {ventures.isError ? (<QueryError message="Unable to load ventures." onRetry={() => ventures.refetch()} />) : ventures.isLoading ? (
           <VentureGridSkeleton count={3} />
         ) : !list.length ? (
           <EmptyState subject={SUBJECT} title="The shop is being set up." body="Companies, foundations, and representations will be posted here as the operation grows."  />

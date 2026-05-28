@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
-import { TimelineSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { HalftoneDots, BoxingGloves } from "@mahama/website-core";
+import { BoxingGloves, EmptyState, HalftoneDots, QueryError, Seo, TimelineSkeleton , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 function dateParts(iso: string) {
@@ -25,6 +22,10 @@ export function SharafTimeline() {
   return (
     <Box sx={{ background: "#0B0B0B", color: "#F4F1ED", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Career · Fight Card Calendar" path="/timeline"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Timeline", path: "/timeline" }]}
+      />
       <HalftoneDots color="rgba(255,255,255,0.025)" />
 
       {/* Top kente strap */}
@@ -58,7 +59,7 @@ export function SharafTimeline() {
           </Box>
         </Box>
 
-        {timeline.isLoading ? (
+        {timeline.isError ? (<QueryError message="Unable to load timeline." onRetry={() => timeline.refetch()} />) : timeline.isLoading ? (
           <TimelineSkeleton count={6} />
         ) : !timeline.data?.length ? (
           <EmptyState subject={SUBJECT} title="The card is being written." body="Career milestones — football, FIFA agency, fight nights — drop here as they get scheduled."  />

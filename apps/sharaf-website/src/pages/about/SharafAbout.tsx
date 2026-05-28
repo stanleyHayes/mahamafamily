@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
-import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, HalftoneDots, RingCorner, BoxingGloves } from "@mahama/website-core";
+import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, HalftoneDots, RingCorner, BoxingGloves , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 interface TaleStat { label: string; value: string; }
@@ -41,6 +41,10 @@ export function SharafAbout() {
   return (
     <Box sx={{ background: "#0B0B0B", color: "#F4F1ED", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Tale of the Tape" path="/about"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "About", path: "/about" }]}
+      />
       <HalftoneDots color="rgba(255,255,255,0.025)" />
 
       {/* Top: kente strap + headline */}

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Box } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
-import { ScheduleFab, Seo, CookieBanner, PageTransition, AnalyticsProvider, RouteFallback, ScrollToTop, SkipLink } from "@mahama/website-core";
+import { ScheduleFab, Seo, CookieBanner, PageTransition, AnalyticsProvider, RouteFallback, ScrollToTop, SkipLink, ErrorBoundary } from "@mahama/website-core";
 import { SUBJECT, SUBJECT_LABELS, api } from "./config.js";
 import { SiteHeader } from "./components/SiteHeader.js";
 import { SiteFooter } from "./components/SiteFooter.js";
@@ -36,6 +36,7 @@ export function App() {
       <SkipLink />
       <SiteHeader />
       <Box component="main" id="main" sx={{ flex: 1 }}>
+        <ErrorBoundary>
         <Suspense fallback={<RouteFallback />}>
           <AnimatePresence mode="wait" initial={false} >
             <Routes location={location} key={location.pathname} >
@@ -55,6 +56,7 @@ export function App() {
             </Routes>
           </AnimatePresence>
         </Suspense>
+        </ErrorBoundary>
       </Box>
       <SiteFooter />
       <ScheduleFab subject={SUBJECT} />

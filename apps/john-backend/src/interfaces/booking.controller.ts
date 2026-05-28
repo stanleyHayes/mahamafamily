@@ -4,6 +4,23 @@ import { z } from "zod";
 import { TYPES } from "@mahama/backend-core";
 import { ok } from "../infrastructure/http/respond.js";
 import type { BookingService } from "../application/booking.service.js";
+
+const meetingTypeSchema = z.object({
+  slug: z.string().min(1).max(80).regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1).max(120),
+  description: z.string().max(2000),
+  durationMinutes: z.number().int().min(5).max(480),
+  bufferMinutes: z.number().int().min(0).max(120),
+  location: z.enum(["in-person", "video", "phone", "custom"]),
+  locationDetails: z.string().max(500).optional(),
+  active: z.boolean(),
+  public: z.boolean(),
+  noticeHours: z.number().int().min(0).max(720),
+  horizonDays: z.number().int().min(1).max(365),
+  color: z.string().max(20).optional(),
+});
+
+
 import type { GoogleCalendarSyncService } from "../application/google-calendar-sync.service.js";
 import type { SettingsRepository } from "../domain/ports.js";
 
@@ -29,17 +46,17 @@ export class BookingController {
 
   // public ---
   listMeetingTypes = async (_req: Request, res: Response, next: NextFunction) => {
-    try { ok(res, await this.svc.listPublicMeetingTypes()); } catch (e) { next(e); }
+    try { ok(res, await this.svc.listPublicMeetingTypes(), 200, 60); } catch (e) { next(e); }
   };
   getMeetingType = async (req: Request, res: Response, next: NextFunction) => {
-    try { ok(res, await this.svc.getPublicMeetingType(req.params.slug!)); } catch (e) { next(e); }
+    try { ok(res, await this.svc.getPublicMeetingType(req.params.slug!), 200, 60); } catch (e) { next(e); }
   };
   listSlots = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const meetingTypeId = String(req.query.meetingTypeId ?? "");
       const from = String(req.query.from ?? new Date().toISOString());
       const to = String(req.query.to ?? new Date(Date.now() + 14 * 86400_000).toISOString());
-      ok(res, await this.svc.listAvailableSlots(meetingTypeId, from, to));
+      ok(res, await this.svc.listAvailableSlots(meetingTypeId, from, to), 200, 10);
     } catch (e) { next(e); }
   };
   create = async (req: Request, res: Response, next: NextFunction) => {
@@ -81,10 +98,10 @@ export class BookingController {
     try { ok(res, await this.svc.listMeetingTypes()); } catch (e) { next(e); }
   };
   createMeetingType = async (req: Request, res: Response, next: NextFunction) => {
-    try { ok(res, await this.svc.createMeetingType(req.body), 201); } catch (e) { next(e); }
+    try { ok(res, await this.svc.createMeetingType(meetingTypeSchema.parse(req.body)), 201); } catch (e) { next(e); }
   };
   updateMeetingType = async (req: Request, res: Response, next: NextFunction) => {
-    try { ok(res, await this.svc.updateMeetingType(req.params.id!, req.body)); } catch (e) { next(e); }
+    try { ok(res, await this.svc.updateMeetingType(req.params.id!, meetingTypeSchema.partial().parse(req.body))); } catch (e) { next(e); }
   };
   deleteMeetingType = async (req: Request, res: Response, next: NextFunction) => {
     try { await this.svc.deleteMeetingType(req.params.id!); ok(res, { ok: true }); } catch (e) { next(e); }

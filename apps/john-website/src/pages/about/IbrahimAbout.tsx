@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Grid, Typography, Stack, Divider } from "@mui/material";
-import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, BlueprintGrid, QueryError } from "@mahama/website-core";
+import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, BlueprintGrid, QueryError , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 export function IbrahimAbout() {
@@ -28,6 +28,10 @@ export function IbrahimAbout() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Dossier" path="/about"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "About", path: "/about" }]}
+      />
       <BlueprintGrid />
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
         {/* Document header — like a corporate filing */}

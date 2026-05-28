@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import type { VentureDTO } from "@mahama/shared-types";
-import { VentureGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { StaggerGroup, StaggerItem } from "@mahama/website-core";
+import { EmptyState, QueryError, Seo, StaggerGroup, StaggerItem, VentureGridSkeleton , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { LORDINA } from "../lordina/theme.js";
 import { Hibiscus, Ribbon, Garland, PaperTexture, Mmusuyidee } from "../lordina/motifs.js";
@@ -25,6 +22,10 @@ export function LordinaPortfolio() {
   return (
     <Box sx={{ background: LORDINA.paper, color: LORDINA.ink, position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="The Foundation & Advocacy" path="/ventures"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Ventures", path: "/ventures" }]}
+      />
       <PaperTexture />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 14 } }}>
@@ -74,7 +75,7 @@ export function LordinaPortfolio() {
           </Grid>
         </Box>
 
-        {ventures.isLoading ? (
+        {ventures.isError ? (<QueryError message="Unable to load ventures." onRetry={() => ventures.refetch()} />) : ventures.isLoading ? (
           <VentureGridSkeleton count={4} />
         ) : !list.length ? (
           <EmptyState subject={SUBJECT}

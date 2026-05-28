@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import { VentureGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
+import { BlueprintGrid, EmptyState, QueryError, Seo, VentureGridSkeleton , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const SECTOR_CODE: Record<string, string> = {
@@ -35,6 +32,10 @@ export function IbrahimPortfolio() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Industrial Holdings" path="/ventures"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Ventures", path: "/ventures" }]}
+      />
       <BlueprintGrid />
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
         {/* Filing header */}
@@ -96,7 +97,7 @@ export function IbrahimPortfolio() {
           </Grid>
         )}
 
-        {ventures.isLoading ? (
+        {ventures.isError ? (<QueryError message="Unable to load ventures." onRetry={() => ventures.refetch()} />) : ventures.isLoading ? (
           <VentureGridSkeleton count={4} />
         ) : !list.length ? (
           <EmptyState subject={SUBJECT} title="The register is empty for now." body="Operating entities will be filed here as they are formalised under the group."  />

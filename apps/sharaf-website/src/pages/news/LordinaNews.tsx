@@ -3,10 +3,7 @@ import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import type { FlattenLocalized, NewsPostDTO } from "@mahama/shared-types";
 import { useTranslation } from "@mahama/i18n";
-import { Seo } from "@mahama/website-core";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { OptimizedImage } from "@mahama/website-core";
+import { CardGridSkeleton, EmptyState, OptimizedImage, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { LORDINA, HANDKERCHIEF_CLIP } from "../lordina/theme.js";
 import { Hibiscus, Ribbon, PaperTexture, Garland } from "../lordina/motifs.js";
@@ -112,6 +109,10 @@ export function LordinaNews() {
   return (
     <Box sx={{ background: LORDINA.paper, color: LORDINA.ink, position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Addresses & Communications" path="/news"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "News", path: "/news" }]}
+      />
       <PaperTexture />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
@@ -134,7 +135,7 @@ export function LordinaNews() {
           </Typography>
         </Box>
 
-        {news.isLoading ? (
+        {news.isError ? (<QueryError message="Unable to load news posts." onRetry={() => news.refetch()} />) : news.isLoading ? (
           <CardGridSkeleton count={6} />
         ) : !news.data?.items.length ? (
           <EmptyState subject={SUBJECT}

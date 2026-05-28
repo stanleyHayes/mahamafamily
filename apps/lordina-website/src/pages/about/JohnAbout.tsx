@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
-import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, KenteStripe, BlackStar, GyeNyame, Sankofa } from "@mahama/website-core";
+import { ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, KenteStripe, BlackStar, GyeNyame, Sankofa , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
@@ -33,6 +33,10 @@ export function JohnAbout() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Biography" path="/about"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "About", path: "/about" }]}
+      />
       <KenteStripe height={6} />
 
       <Container maxWidth="md" sx={{ py: { xs: 8, md: 14 } }}>

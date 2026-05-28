@@ -3,11 +3,7 @@ import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import type { FlattenLocalized, NewsPostDTO } from "@mahama/shared-types";
 import { useTranslation } from "@mahama/i18n";
-import { Seo } from "@mahama/website-core";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { HalftoneDots } from "@mahama/website-core";
-import { OptimizedImage } from "@mahama/website-core";
+import { CardGridSkeleton, EmptyState, HalftoneDots, OptimizedImage, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { normalizeLang } from "@mahama/shared-types";
 import { resolveLocalized } from "@mahama/shared-types";
@@ -149,6 +145,10 @@ export function SharafNews() {
   return (
     <Box sx={{ background: "#0B0B0B", color: "#F4F1ED", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Ringside Press" path="/news"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "News", path: "/news" }]}
+      />
       <HalftoneDots color="rgba(255,255,255,0.025)" />
 
       <Box sx={{ display: "flex", height: 5 }}>
@@ -173,7 +173,7 @@ export function SharafNews() {
           </Typography>
         </Box>
 
-        {news.isLoading ? (
+        {news.isError ? (<QueryError message="Unable to load news posts." onRetry={() => news.refetch()} />) : news.isLoading ? (
           <CardGridSkeleton count={6} />
         ) : !news.data?.items.length ? (
           <EmptyState subject={SUBJECT}

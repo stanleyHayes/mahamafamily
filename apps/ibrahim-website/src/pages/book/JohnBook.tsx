@@ -3,10 +3,7 @@ import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink } from "react-router-dom";
 import type { MeetingTypeDTO } from "@mahama/shared-types";
-import { Seo } from "@mahama/website-core";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame } from "@mahama/website-core";
+import { BlackStar, CardGridSkeleton, EmptyState, GyeNyame, KenteStripe, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 function AudienceCard({ mt, index }: { mt: MeetingTypeDTO; index: number }) {
@@ -137,6 +134,10 @@ export function JohnBookIndex() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Audience Bureau" path="/book"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Book", path: "/book" }]}
+      />
       <KenteStripe height={6} />
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
@@ -176,7 +177,7 @@ export function JohnBookIndex() {
           </Stack>
         </Box>
 
-        {types.isLoading ? (
+        {types.isError ? (<QueryError message="Unable to load meeting types." onRetry={() => types.refetch()} />) : types.isLoading ? (
           <CardGridSkeleton count={3} />
         ) : !types.data?.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="The Bureau is currently closed." body="Audiences will be made available again at the discretion of the Office."  />

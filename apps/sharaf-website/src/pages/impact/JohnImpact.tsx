@@ -2,10 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import type { PhilanthropyDTO } from "@mahama/shared-types";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame, Sankofa } from "@mahama/website-core";
+import { BlackStar, CardGridSkeleton, EmptyState, GyeNyame, KenteStripe, QueryError, Sankofa, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const CATEGORIES = [
@@ -113,6 +110,10 @@ export function JohnImpact() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Public Service Record" path="/impact"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Impact", path: "/impact" }]}
+      />
       <KenteStripe height={6} />
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
@@ -179,7 +180,7 @@ export function JohnImpact() {
           </Stack>
         )}
 
-        {phil.isLoading ? (
+        {phil.isError ? (<QueryError message="Unable to load philanthropy." onRetry={() => phil.refetch()} />) : phil.isLoading ? (
           <CardGridSkeleton count={6} />
         ) : !all.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="The record is being prepared." body="Programmes will be filed here as the office of the President formalises them."  />

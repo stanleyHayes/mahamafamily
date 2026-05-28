@@ -5,9 +5,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { api, SUBJECT, SUBJECT_LABELS } from "../config.js";;
-import { trackEvent } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid, DrillRig } from "@mahama/website-core";
+import { BlueprintGrid, DrillRig, Seo, trackEvent , BreadcrumbSchema} from "@mahama/website-core";
 
 const MONO = '"IBM Plex Mono", monospace';
 const SERIF = '"Playfair Display", Georgia, serif';
@@ -39,6 +37,7 @@ const inputSx = {
 export function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", body: "", category: "general" as (typeof CATEGORIES)[number]["value"] });
   const [honeypot, setHoneypot] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [snack, setSnack] = useState<{ msg: string; ok: boolean } | null>(null);
 
   const submit = useMutation({
@@ -56,6 +55,10 @@ export function ContactPage() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="File a dispatch · Office of the Patron" path="/contact"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]}
+      />
       <BlueprintGrid />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, pt: { xs: 12, md: 18 }, pb: { xs: 12, md: 18 } }}>
@@ -88,7 +91,16 @@ export function ContactPage() {
           <Grid item xs={12} md={8} >
             <Box
               component="form"
-              onSubmit={(e) => { e.preventDefault(); submit.mutate(); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                const next: Record<string, string> = {};
+                if (!form.name.trim() || form.name.trim().length < 2) next.name = "Name must be at least 2 characters.";
+                if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = "Please enter a valid email address.";
+                if (!form.subject.trim() || form.subject.trim().length < 2) next.subject = "Subject must be at least 2 characters.";
+                if (!form.body.trim() || form.body.trim().length < 10) next.body = "Message must be at least 10 characters.";
+                setErrors(next);
+                if (Object.keys(next).length === 0) submit.mutate();
+              }}
               sx={{ border: "1px solid rgba(201,162,39,0.35)", p: { xs: 3, md: 5 }, background: "rgba(8,9,12,0.65)", position: "relative" }}
             >
               {/* corner stamp */}
@@ -104,9 +116,9 @@ export function ContactPage() {
                     § 1 · Sender
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6} ><TextField label="Full name" required fullWidth value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} sx={inputSx} /></Grid>
-                <Grid item xs={12} sm={6} ><TextField label="Email" type="email" required fullWidth value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} sx={inputSx} /></Grid>
-                <Grid item xs={12} sm={6} ><TextField label="Phone (optional)" fullWidth value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} sx={inputSx} /></Grid>
+                <Grid item xs={12} sm={6} ><TextField label="Full name" required fullWidth autoComplete="name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} error={!!errors.name} helperText={errors.name || " "} sx={inputSx} /></Grid>
+                <Grid item xs={12} sm={6} ><TextField label="Email" type="email" required fullWidth autoComplete="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} error={!!errors.email} helperText={errors.email || " "} sx={inputSx} /></Grid>
+                <Grid item xs={12} sm={6} ><TextField label="Phone (optional)" fullWidth autoComplete="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} sx={inputSx} /></Grid>
                 <Grid item xs={12} sm={6} >
                   <TextField select label="Filing category" fullWidth value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as typeof form.category }))} sx={inputSx} >
                     {CATEGORIES.map((c) => <MenuItem key={c.value} value={c.value} >{c.label}</MenuItem>)}
@@ -120,7 +132,7 @@ export function ContactPage() {
                     § 2 · The matter
                   </Typography>
                 </Grid>
-                <Grid item xs={12} ><TextField label="Subject heading" required fullWidth value={form.subject} onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))} sx={inputSx} /></Grid>
+                <Grid item xs={12} ><TextField label="Subject heading" required fullWidth autoComplete="off" value={form.subject} onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))} error={!!errors.subject} helperText={errors.subject || " "} sx={inputSx} /></Grid>
                 <Grid item xs={12} >
                   <TextField
                     label="Body of the letter"
@@ -128,8 +140,11 @@ export function ContactPage() {
                     minRows={7}
                     required
                     fullWidth
+                    autoComplete="off"
                     value={form.body}
                     onChange={(e) => setForm((f) => ({ ...f, body: e.target.value }))}
+                    error={!!errors.body}
+                    helperText={errors.body || " "}
                     sx={inputSx} />
                 </Grid>
               </Grid>

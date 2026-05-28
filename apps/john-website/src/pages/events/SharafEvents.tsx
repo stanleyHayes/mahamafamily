@@ -4,10 +4,7 @@ import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import type { FlattenLocalized, EventDTO } from "@mahama/shared-types";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { HalftoneDots, BoxingGloves, RingCorner } from "@mahama/website-core";
+import { BoxingGloves, CardGridSkeleton, EmptyState, HalftoneDots, QueryError, RingCorner, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { normalizeLang } from "@mahama/shared-types";
 import { resolveLocalized } from "@mahama/shared-types";
@@ -165,6 +162,10 @@ export function SharafEvents() {
   return (
     <Box sx={{ background: "#0B0B0B", color: "#F4F1ED", position: "relative", overflow: "hidden" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Fight Card Schedule" path="/events"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Events", path: "/events" }]}
+      />
       <HalftoneDots color="rgba(255,255,255,0.025)" />
 
       {/* Top kente strap */}
@@ -230,7 +231,7 @@ export function SharafEvents() {
           </Stack>
         )}
 
-        {events.isLoading ? (
+        {events.isError ? (<QueryError message="Unable to load events." onRetry={() => events.refetch()} />) : events.isLoading ? (
           <CardGridSkeleton count={4} />
         ) : !sorted.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="Cards announced soon." body="The next Legacy Rise fight night and undercards drop here the moment they're locked." ctaLabel="Book ringside time" ctaTo="/book"  />

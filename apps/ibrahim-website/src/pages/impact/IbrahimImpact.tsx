@@ -2,11 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import type { PhilanthropyDTO } from "@mahama/shared-types";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
-import { StaggerGroup, StaggerItem } from "@mahama/website-core";
+import { BlueprintGrid, CardGridSkeleton, EmptyState, QueryError, Seo, StaggerGroup, StaggerItem , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const CATEGORIES: Array<{ key: string; label: string; code: string} > = [
@@ -120,6 +116,10 @@ export function IbrahimImpact() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Ledger of Service" path="/impact"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Impact", path: "/impact" }]}
+      />
       <BlueprintGrid />
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
         {/* Filing header */}
@@ -199,7 +199,7 @@ export function IbrahimImpact() {
           </Box>
         )}
 
-        {phil.isLoading ? (
+        {phil.isError ? (<QueryError message="Unable to load philanthropy." onRetry={() => phil.refetch()} />) : phil.isLoading ? (
           <CardGridSkeleton count={6} />
         ) : !allItems.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="The ledger awaits filing." body="Programmes are recorded here as the office formalises them."  />

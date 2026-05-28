@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { Box, Container, Stack, Typography, Button } from "@mui/material";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { motion } from "framer-motion";
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid, DrillRig } from "@mahama/website-core";
+import { BlueprintGrid, DrillRig, Seo, trackEvent } from "@mahama/website-core";
 import { SUBJECT, SUBJECT_LABELS, api } from "../config.js";
 
 const MONO = '"IBM Plex Mono", monospace';
@@ -11,6 +11,7 @@ const SERIF = '"Playfair Display", Georgia, serif';
 
 export function NotFoundPage() {
   const { pathname } = useLocation();
+  useEffect(() => { trackEvent("404", { path: pathname }); }, [pathname]);
   const stamp = new Date().toISOString().slice(0, 10);
 
   return (

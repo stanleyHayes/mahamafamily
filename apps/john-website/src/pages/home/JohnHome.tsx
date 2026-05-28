@@ -3,11 +3,7 @@ import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Seo, OptimizedImage } from "@mahama/website-core";
-import { HeroSkeleton } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame, Sankofa } from "@mahama/website-core";
-import { Reveal } from "@mahama/website-core";
-import { StaggerGroup, StaggerItem } from "@mahama/website-core";
+import { BlackStar, GyeNyame, HeroSkeleton, KenteStripe, OptimizedImage, Reveal, Sankofa, Seo, StaggerGroup, StaggerItem } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 export function JohnHome() {

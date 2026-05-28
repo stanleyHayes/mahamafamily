@@ -4,11 +4,7 @@ import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Seo, OptimizedImage } from "@mahama/website-core";
-import { HeroSkeleton } from "@mahama/website-core";
-import { HalftoneDots, BoxingGloves } from "@mahama/website-core";
-import { Reveal } from "@mahama/website-core";
-import { StaggerGroup, StaggerItem } from "@mahama/website-core";
+import { BoxingGloves, HalftoneDots, HeroSkeleton, OptimizedImage, Reveal, Seo, StaggerGroup, StaggerItem } from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 export function SharafHome() {

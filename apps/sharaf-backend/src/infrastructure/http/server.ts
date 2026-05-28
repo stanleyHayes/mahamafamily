@@ -118,10 +118,21 @@ export async function startServer(container: Container, env: BackendEnv, logger:
 
   app.use(errorHandler(logger));
 
-  await new Promise<void>((resolve) => {
-    app.listen(env.PORT, () => {
-      logger.info(`API listening`, { port: env.PORT, subject: env.SUBJECT });
-      resolve();
-    });
+  const server = app.listen(env.PORT, () => {
+    logger.info(`API listening`, { port: env.PORT, subject: env.SUBJECT });
   });
+
+  return {
+    async shutdown() {
+      logger.info("shutting down server");
+      await new Promise<void>((resolve, reject) => {
+        server.close((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+      await db.client.close();
+      logger.info("shutdown complete");
+    },
+  };
 }

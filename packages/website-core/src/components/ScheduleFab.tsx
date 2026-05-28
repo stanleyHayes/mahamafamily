@@ -2,6 +2,7 @@ import { Fab, Tooltip } from "@mui/material";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import type { SubjectKey } from "@mahama/shared-types";
+import { trackEvent } from "../analytics.js";
 
 const LABELS: Record<SubjectKey, string> = {
   ibrahim: "Schedule a meeting",
@@ -19,6 +20,7 @@ export function ScheduleFab({ subject }: { subject: SubjectKey }) {
         aria-label={LABELS[subject] ?? "Book"}
         component={RouterLink}
         to="/book"
+        onClick={() => trackEvent("schedule_fab_clicked")}
         color="secondary"
         sx={{
           position: "fixed",

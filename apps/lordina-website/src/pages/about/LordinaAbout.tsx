@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
-import {ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError} from "@mahama/website-core";
+import {ProfileSkeleton, OptimizedImage, EmptyState, Seo, QueryError, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { LORDINA, HANDKERCHIEF_CLIP, INVITATION_CLIP } from "../lordina/theme.js";
 import { Hibiscus, Ribbon, Garland, PaperTexture, Mmusuyidee } from "../lordina/motifs.js";
@@ -32,6 +32,10 @@ export function LordinaAbout() {
   return (
     <Box sx={{ background: LORDINA.paper, color: LORDINA.ink, position: "relative" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Biography" path="/about"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "About", path: "/about" }]}
+      />
       <PaperTexture />
 
       <Container maxWidth="md" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 14 } }}>

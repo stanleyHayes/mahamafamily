@@ -3,11 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@mahama/i18n";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import type { FlattenLocalized, EventDTO } from "@mahama/shared-types";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
-import { StaggerGroup, StaggerItem } from "@mahama/website-core";
+import { BlueprintGrid, CardGridSkeleton, EmptyState, QueryError, Seo, StaggerGroup, StaggerItem , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { normalizeLang } from "@mahama/shared-types";
 import { resolveLocalized } from "@mahama/shared-types";
@@ -124,6 +120,10 @@ export function IbrahimEvents() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Engagements Diary" path="/events"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Events", path: "/events" }]}
+      />
       <BlueprintGrid />
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
         {/* Filing header */}
@@ -179,7 +179,7 @@ export function IbrahimEvents() {
           </Box>
         )}
 
-        {events.isLoading ? (
+        {events.isError ? (<QueryError message="Unable to load events." onRetry={() => events.refetch()} />) : events.isLoading ? (
           <CardGridSkeleton count={4} />
         ) : !sorted.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="No engagements on the diary." body="Speeches and forums will appear here as they are confirmed." ctaLabel="Schedule a meeting" ctaTo="/book"  />

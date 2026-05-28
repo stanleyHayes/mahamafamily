@@ -3,10 +3,7 @@ import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink } from "react-router-dom";
 import type { MeetingTypeDTO } from "@mahama/shared-types";
-import { Seo } from "@mahama/website-core";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { BlueprintGrid } from "@mahama/website-core";
+import { BlueprintGrid, CardGridSkeleton, EmptyState, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const CAT_CODE: Record<string, string> = {
@@ -132,6 +129,10 @@ export function IbrahimBookIndex() {
   return (
     <Box sx={{ background: "#08090C", color: "#F2EDE2", position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Appointment Registry" path="/book"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Book", path: "/book" }]}
+      />
       <BlueprintGrid />
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
         {/* Header */}
@@ -154,7 +155,7 @@ export function IbrahimBookIndex() {
           </Typography>
         </Box>
 
-        {types.isLoading ? (
+        {types.isError ? (<QueryError message="Unable to load meeting types." onRetry={() => types.refetch()} />) : types.isLoading ? (
           <CardGridSkeleton count={3} />
         ) : !types.data?.length ? (
           <EmptyState subject={SUBJECT} variant="illustrated" title="The office is closed for new bookings." body="Public scheduling will reopen shortly."  />

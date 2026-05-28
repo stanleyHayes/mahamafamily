@@ -3,11 +3,7 @@ import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import type { FlattenLocalized, NewsPostDTO } from "@mahama/shared-types";
 import { useTranslation } from "@mahama/i18n";
-import { Seo } from "@mahama/website-core";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame } from "@mahama/website-core";
-import { OptimizedImage } from "@mahama/website-core";
+import { BlackStar, CardGridSkeleton, EmptyState, GyeNyame, KenteStripe, OptimizedImage, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { normalizeLang } from "@mahama/shared-types";
 import { resolveLocalized } from "@mahama/shared-types";
@@ -150,6 +146,10 @@ export function JohnNews() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="Communiqué Archive" path="/news"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "News", path: "/news" }]}
+      />
       <KenteStripe height={6} />
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
@@ -170,7 +170,7 @@ export function JohnNews() {
           </Typography>
         </Box>
 
-        {news.isLoading ? (
+        {news.isError ? (<QueryError message="Unable to load news posts." onRetry={() => news.refetch()} />) : news.isLoading ? (
           <CardGridSkeleton count={6} />
         ) : !news.data?.items.length ? (
           <EmptyState subject={SUBJECT}

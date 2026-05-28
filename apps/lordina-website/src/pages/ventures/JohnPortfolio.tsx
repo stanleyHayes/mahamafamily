@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import type { VentureDTO } from "@mahama/shared-types";
-import { VentureGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
-import { KenteStripe, BlackStar, GyeNyame } from "@mahama/website-core";
+import { BlackStar, EmptyState, GyeNyame, KenteStripe, QueryError, Seo, VentureGridSkeleton , BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
@@ -27,6 +24,10 @@ export function JohnPortfolio() {
   return (
     <Box sx={{ background: "#FBF8F1", color: "#0F1A14" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="The Programme" path="/ventures"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Ventures", path: "/ventures" }]}
+      />
       <KenteStripe height={6} />
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 14 } }}>
@@ -78,7 +79,7 @@ export function JohnPortfolio() {
           </Grid>
         </Box>
 
-        {ventures.isLoading ? (
+        {ventures.isError ? (<QueryError message="Unable to load ventures." onRetry={() => ventures.refetch()} />) : ventures.isLoading ? (
           <VentureGridSkeleton count={4} />
         ) : !list.length ? (
           <EmptyState subject={SUBJECT}

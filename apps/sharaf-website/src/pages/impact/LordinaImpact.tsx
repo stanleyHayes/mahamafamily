@@ -2,9 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Container, Typography, Stack, Grid, Button } from "@mui/material";
 import type { PhilanthropyDTO } from "@mahama/shared-types";
-import { CardGridSkeleton } from "@mahama/website-core";
-import { EmptyState } from "@mahama/website-core";
-import { Seo } from "@mahama/website-core";
+import { CardGridSkeleton, EmptyState, QueryError, Seo, BreadcrumbSchema} from "@mahama/website-core";
 import { api, SUBJECT, SUBJECT_LABELS } from "../../config.js";;
 import { LORDINA, HANDKERCHIEF_CLIP } from "../lordina/theme.js";
 import { Hibiscus, Ribbon, Garland, PaperTexture, Mmusuyidee } from "../lordina/motifs.js";
@@ -92,6 +90,10 @@ export function LordinaImpact() {
   return (
     <Box sx={{ background: LORDINA.paper, color: LORDINA.ink, position: "relative", minHeight: "100vh" }}>
       <Seo subject={SUBJECT} labels={SUBJECT_LABELS} api={api} title="The Foundation Register" path="/impact"  />
+      <BreadcrumbSchema
+        baseUrl={window.location.origin}
+        items={[{ name: "Home", path: "/" }, { name: "Impact", path: "/impact" }]}
+      />
       <PaperTexture />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 8, md: 12 } }}>
@@ -161,7 +163,7 @@ export function LordinaImpact() {
           </Stack>
         )}
 
-        {phil.isLoading ? (
+        {phil.isError ? (<QueryError message="Unable to load philanthropy." onRetry={() => phil.refetch()} />) : phil.isLoading ? (
           <CardGridSkeleton count={6} />
         ) : !all.length ? (
           <EmptyState subject={SUBJECT}
